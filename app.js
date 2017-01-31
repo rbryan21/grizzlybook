@@ -3,8 +3,12 @@ var path = require("path");
 var express = require("express");
 var logger = require("morgan");
 var bodyParser = require("body-parser");
+var mongoose = require("mongoose");
 
-var Message = require('/message.js');
+
+
+var configDB = require('./config/database.js');
+mongoose.connect(configDB.url);
 
 // Make an express app
 var app = express();
@@ -16,6 +20,8 @@ app.set("view engine", "ejs");
 var entries = [];
 // Makes this entries array available in all views
 app.locals.entries = entries;
+
+var Message = require('./models/message.js');
 
 // Uses Morgan to log every request
 app.use(logger("dev"));
@@ -43,13 +49,14 @@ app.post("/new-entry", function(request, response) {
     }
 
     var newMessage = new Message();
-      newMessage.title = request.body.title;
-      newMessage.entryTest = request.body.entryTest;
+    newMessage.title = "Hello";
+    newMessage.entryTest = "This is text";
     
     newMessage.save(function(err) {
       if (err) {
-        throw err;
+        console.log("unsuccessful save");
       } else {
+        console.log("successful save");
         // Redirect if save 
         res.redirect('/');
       }
