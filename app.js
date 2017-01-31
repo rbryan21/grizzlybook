@@ -4,6 +4,8 @@ var express = require("express");
 var logger = require("morgan");
 var bodyParser = require("body-parser");
 
+var Message = require('/message.js');
+
 // Make an express app
 var app = express();
 
@@ -39,6 +41,20 @@ app.post("/new-entry", function(request, response) {
         response.status(400).send("Entries must have a title and a body");
         return;
     }
+
+    var newMessage = new Message();
+      newMessage.title = request.body.title;
+      newMessage.entryTest = request.body.entryTest;
+    
+    newMessage.save(function(err) {
+      if (err) {
+        throw err;
+      } else {
+        // Redirect if save 
+        res.redirect('/');
+      }
+    });
+
     // Adds a new entry to the list of entries
     entries.push({
         title: request.body.title,
