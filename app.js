@@ -48,17 +48,15 @@ app.post("/new-entry", function(request, response) {
         return;
     }
 
-    var newMessage = new Message();
-    newMessage.title = "Hello";
-    newMessage.entryTest = "This is text";
-    
+    var newMessage = new Message({
+        title : request.body.title,
+        entryText : request.body.body
+    });
+
     newMessage.save(function(err) {
       if (err) {
-        console.log("unsuccessful save");
+        console.log(err);
       } else {
-        console.log("successful save");
-        // Redirect if save 
-        res.redirect('/');
       }
     });
 
