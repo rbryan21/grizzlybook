@@ -70,7 +70,7 @@ app.post("/new-entry", function(request, response) {
        
     }, function(err, message) {
         if (err) throw err;
-        console.log(message.title);
+        console.log(message);
     });
 
     // mongoose.Message.find({}).forEach(function(err, doc) {
