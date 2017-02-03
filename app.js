@@ -60,6 +60,54 @@ app.post("/new-entry", function(request, response) {
       }
     });
 
+/*
+ var query = {}; // select all docs
+  var collection = db.collection('demo');
+  var cursor = collection.find(query);
+*/
+    
+    Message.find({
+       
+    }, function(err, message) {
+        if (err) throw err;
+        console.log(message.title);
+    });
+
+    // mongoose.Message.find({}).forEach(function(err, doc) {
+    //     if (!err) {
+    //         console.log(doc.title);
+    //     } else {
+    //         throw err;
+    //     }
+    // });
+
+    /*
+
+
+    db.collection.find(query).forEach(function(err, doc) {
+  // handle
+});
+SiteModel.find({}, function(err, docs) {
+    if (!err){ 
+        console.log(docs);
+        process.exit();
+    } else {throw err;}
+});
+
+data.forEach(function(record){
+    console.log(record.name);
+    // Do whatever processing you want
+});
+
+Model.find().each(doc => {
+  console.log(doc) // loop using curosr
+}).then(res => {
+  console.log('Results count:', res.count);
+})
+
+
+    */
+
     // Adds a new entry to the list of entries
     entries.push({
         title: request.body.title,
