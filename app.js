@@ -5,8 +5,6 @@ var logger = require("morgan");
 var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
 
-
-
 var configDB = require('./config/database.js');
 mongoose.connect(configDB.url);
 
@@ -30,8 +28,25 @@ app.use(logger("dev"));
 // form (The extended option is required.)
 app.use(bodyParser.urlencoded({ extended: false}));
 
+function loadPastMessages() {
+     Message.find({  
+        }, function(err, message) {
+            if (err) {
+                console.log(err);    
+            }
+            message.forEach(function(message) {
+                entries.push({
+                    title: message.title,
+                    content: message.entryText,
+                    published: message.date
+                })   
+            });
+        });
+}
+
 // When visiting the site root, renders the homepage (at views/index.ejs)
 app.get("/", function(request, response) {
+    
     response.render("index");
 });
 
@@ -60,54 +75,6 @@ app.post("/new-entry", function(request, response) {
       }
     });
 
-/*
- var query = {}; // select all docs
-  var collection = db.collection('demo');
-  var cursor = collection.find(query);
-*/
-    
-    Message.find({
-       
-    }, function(err, message) {
-        if (err) throw err;
-        console.log(message);
-    });
-
-    // mongoose.Message.find({}).forEach(function(err, doc) {
-    //     if (!err) {
-    //         console.log(doc.title);
-    //     } else {
-    //         throw err;
-    //     }
-    // });
-
-    /*
-
-
-    db.collection.find(query).forEach(function(err, doc) {
-  // handle
-});
-SiteModel.find({}, function(err, docs) {
-    if (!err){ 
-        console.log(docs);
-        process.exit();
-    } else {throw err;}
-});
-
-data.forEach(function(record){
-    console.log(record.name);
-    // Do whatever processing you want
-});
-
-Model.find().each(doc => {
-  console.log(doc) // loop using curosr
-}).then(res => {
-  console.log('Results count:', res.count);
-})
-
-
-    */
-
     // Adds a new entry to the list of entries
     entries.push({
         title: request.body.title,
@@ -126,4 +93,5 @@ app.use(function(request, response) {
 // Start server on port 3000
 http.createServer(app).listen(3000, function() {
     console.log("Guestbook app started on port 3000.");
+    loadPastMessages();
 })
