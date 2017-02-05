@@ -4,7 +4,8 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <div class="text-muted pull-right">
-                    <%= entry.published %>
+                    <%= entry.published %>&nbsp;<a href='/new-entry' style="color:inherit;"><span class="pull-right glyphicon glyphicon-edit"></span>&nbsp;</a>
+                    <a href='/new-entry' style="color:inherit;"><span class="pull-right glyphicon glyphicon-remove"  style="padding-right: 5px;"></span></a>
                 </div>
                 <%= entry.title %>
             </div>

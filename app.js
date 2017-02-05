@@ -29,6 +29,7 @@ app.use(logger("dev"));
 app.use(bodyParser.urlencoded({ extended: false}));
 
 function loadPastMessages() {
+   
      Message.find({  
         }, function(err, message) {
             if (err) {
@@ -38,10 +39,24 @@ function loadPastMessages() {
                 entries.push({
                     title: message.title,
                     content: message.entryText,
-                    published: message.date
+                    published: message.published
                 })   
             });
         });
+}
+
+function formatDate(date) {
+    var month = date.getMonth() + 1;
+    var day = date.getDate();
+    var year = date.getFullYear();
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var ampm = hours >= 12 ? 'pm' : 'am';
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    minutes = minutes < 10 ? '0'+minutes : minutes;
+    var strTime = month + '/' + day + '/' + year + " " + hours + ':' + minutes + ' ' + ampm;
+    return strTime;
 }
 
 // When visiting the site root, renders the homepage (at views/index.ejs)
@@ -65,7 +80,8 @@ app.post("/new-entry", function(request, response) {
 
     var newMessage = new Message({
         title : request.body.title,
-        entryText : request.body.body
+        entryText : request.body.body,
+        published : formatDate(new Date())
     });
 
     newMessage.save(function(err) {
@@ -79,8 +95,9 @@ app.post("/new-entry", function(request, response) {
     entries.push({
         title: request.body.title,
         content: request.body.body,
-        published: new Date()
+        published: formatDate(new Date())
     });
+    console.log(newMessage._id);
     // Redirect to homepage to see new entry
     response.redirect("/");
 });
