@@ -29,31 +29,18 @@ app.use(logger("dev"));
 // form (The extended option is required.)
 app.use(bodyParser.urlencoded({ extended: false}));
 
-function loadPastMessages() {
-   
-     Message.find({  
-        }, function(err, message) {
-            if (err) {
-                console.log(err);    
-            }
-            message.forEach(function(message) {
-                entries.push({
-                    title: message.title,
-                    content: message.entryText,
-                    published: message.published
-                })   
-            });
-        });
-}
-
 var newEntryCtrl = require('./controllers/new-entry.js');
-var indexCtrl = require('./controllers/index.js');
 
 // When visiting the site root, renders the homepage (at views/index.ejs)
-app.get("/", indexCtrl.loadIndex);
+app.get("/", newEntryCtrl.loadIndex);
 
 // Renders the "new entry" page (at views/index.ejs) when GETing the URL
 app.get("/new-entry", newEntryCtrl.loadNewEntry);
+
+app.delete("/new-entry", newEntryCtrl.deleteEntry);
+
+app.get("/update-entry/:messageId", newEntryCtrl.getEntryToUpdate);
+app.post("/update-entry/:messageId", newEntryCtrl.postEntry);
 
 app.post("/new-entry", newEntryCtrl.postNewEntry);
 
@@ -65,5 +52,24 @@ app.use(function(request, response) {
 // Start server on port 3000
 http.createServer(app).listen(3000, function() {
     console.log("Guestbook app started on port 3000.");
-    loadPastMessages();
+    loadMessages();
 })
+
+
+function loadMessages() {
+     Message.find({  
+        }, function(err, message) {
+            if (err) {
+                console.log(err);    
+            }
+            message.forEach(function(message) {
+                entries.push({
+                    title: message.title,
+                    content: message.entryText,
+                    published: message.published,
+                    _id: message._id
+                })   
+            });
+        });
+        console.log(entries);
+}

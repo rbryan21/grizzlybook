@@ -5,13 +5,12 @@
     <div class="form-group">
         <label for="title">Title</label>
         <input type="text" class="form-control" id="title"
-            name="title" placeholder="Entry title" required>
+            name="title" required value="<%=title%>">
     </div>
     <div class="form-group">
         <label for="content">Entry text</label>
         <textarea class="form-control" id="body" name="entryText"
-            placeholder="Love Express! It's a great tool for
-            building websites." rows="3" required></textarea>
+        rows="3"><%=entryText%></textarea>
     </div>
     <div class="form-group">
         <input type="submit" value="Post entry" class="btn btn-primary">

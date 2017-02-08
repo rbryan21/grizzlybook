@@ -7,15 +7,15 @@ module.exports.loadNewEntry = function(request, response) {
 
 //POST /new-entry
 module.exports.postNewEntry = function(request, response) {
-    if (!request.body.title || !request.body.body) {
+    if (!request.body.title || !request.body.entryText) {
             response.status(400).send("Entries must have a title and a body");
             return;
         }
 
         var newMessage = new Message({
             title : request.body.title,
-            entryText : request.body.body,
-            published : formatDate(new Date())
+            entryText : request.body.entryText,
+            published : formatDate(new Date()), 
         });
 
         newMessage.save(function(err) {
@@ -28,8 +28,9 @@ module.exports.postNewEntry = function(request, response) {
         // Adds a new entry to the list of entries
         entries.push({
             title: request.body.title,
-            content: request.body.body,
-            published: formatDate(new Date())
+            content: request.body.entryText,
+            published: formatDate(new Date()),
+            _id: newMessage._id
         });
 
         console.log(newMessage._id);
@@ -41,8 +42,50 @@ module.exports.deleteEntry = function(request, response) {
 
 };
 
-module.exports.editEntry = function(request, response) {
+module.exports.loadIndex = function(request, response) {
+    response.render("index.ejs");
+};
 
+module.exports.getEntryToUpdate = function(request, response) {
+    console.log(request.params.messageId);
+    Message
+        .findById(request.params.messageId)
+        .exec(
+            function(err, messageDetails) {
+                if (err) {
+                    console.log(err);
+                }
+                else {
+                    response.render('update-entry.ejs', {
+                    title : messageDetails.title,
+                    entryText : messageDetails.entryText
+                    });
+                }
+            }
+        );
+}
+
+module.exports.postEntry = function(request, response) {
+    Message.update({'_id' : request.params.messageId}, {
+        'title' : request.body.title,
+        'entryText' : request.body.entryText
+    }, function(err) {
+        if (err) {
+            console.log(err);
+        } else {
+            entries.forEach(function(entry) {
+                console.log('Entry._id = ',entry._id);
+                console.log('request.params.messageId = ', request.params.messageId);
+                console.log('/n');
+                if (entry._id == request.params.messageId) {
+                    console.log('hi');
+                    entry.entryText = request.body.entryText;
+                    entry.title = request.body.title;
+                }
+            })
+            response.redirect('/');
+        }
+    });
 };
 
 function formatDate(date) {
@@ -58,3 +101,5 @@ function formatDate(date) {
     var strTime = month + '/' + day + '/' + year + " " + hours + ':' + minutes + ' ' + ampm;
     return strTime;
 }
+
+
