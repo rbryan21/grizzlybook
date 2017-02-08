@@ -39,7 +39,24 @@ module.exports.postNewEntry = function(request, response) {
 };
 
 module.exports.deleteEntry = function(request, response) {
+    Message
+        .findByIdAndRemove(request.params.messageId)
+        .exec(
+            function(err, message) {
+                if (err) {
+                    console.log(err);
+                }
+            }
+        );
 
+         for (var index = 0; index < entries.length; index++) {
+                    if (entries[index]._id == request.params.messageId) {
+                        entries.splice(index, 1); // remove message
+                    }
+                }
+            
+              
+        response.redirect("/");
 };
 
 module.exports.loadIndex = function(request, response) {

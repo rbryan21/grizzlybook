@@ -37,7 +37,7 @@ app.get("/", newEntryCtrl.loadIndex);
 // Renders the "new entry" page (at views/index.ejs) when GETing the URL
 app.get("/new-entry", newEntryCtrl.loadNewEntry);
 
-app.delete("/new-entry", newEntryCtrl.deleteEntry);
+app.get("/update-entry/delete/:messageId", newEntryCtrl.deleteEntry);
 
 app.get("/update-entry/:messageId", newEntryCtrl.getEntryToUpdate);
 app.post("/update-entry/:messageId", newEntryCtrl.postEntry);
