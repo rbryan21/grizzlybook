@@ -28,7 +28,7 @@ module.exports.postNewEntry = function(request, response) {
         // Adds a new entry to the list of entries
         entries.push({
             title: request.body.title,
-            content: request.body.entryText,
+            entryText: request.body.entryText,
             published: formatDate(new Date()),
             _id: newMessage._id
         });
@@ -91,11 +91,11 @@ module.exports.postEntry = function(request, response) {
             console.log(err);
         } else {
             entries.forEach(function(entry) {
-                console.log('Entry._id = ',entry._id);
-                console.log('request.params.messageId = ', request.params.messageId);
-                console.log('/n');
+                // console.log('Entry._id = ',entry._id);
+                // console.log('request.params.messageId = ', request.params.messageId);
+                // console.log('/n');
                 if (entry._id == request.params.messageId) {
-                    console.log('hi');
+                    // console.log('hi');
                     entry.entryText = request.body.entryText;
                     entry.title = request.body.title;
                 }
