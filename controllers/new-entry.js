@@ -53,12 +53,13 @@ module.exports.deleteEntry = function(request, response) {
                     if (entries[index]._id == request.params.messageId) {
                         entries.splice(index, 1); // remove message
                     }
-                }
+         }
             
               
         response.redirect("/");
 };
 
+// GET '/'
 module.exports.loadIndex = function(request, response) {
     response.render("index.ejs");
 };

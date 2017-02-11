@@ -17,10 +17,9 @@ app.set("views", path.resolve(__dirname, "views"));
 app.set("view engine", "ejs");
 
 // Creates a global array to store all your entries
-entries = [];
+entries = loadMessages();
 // Makes this entries array available in all views
 app.locals.entries = entries;
-
 
 // Uses Morgan to log every request
 app.use(logger("dev"));
@@ -44,6 +43,8 @@ app.post("/update-entry/:messageId", newEntryCtrl.postEntry);
 
 app.post("/new-entry", newEntryCtrl.postNewEntry);
 
+// var app = angular.module('testApp', []);
+
 // Renders a 404 page because you're requesting an unknown source
 app.use(function(request, response) {
     response.status(404).render("404");
@@ -52,11 +53,11 @@ app.use(function(request, response) {
 // Start server on port 3000
 http.createServer(app).listen(3000, function() {
     console.log("Guestbook app started on port 3000.");
-    loadMessages();
 })
 
 
 function loadMessages() {
+    entries = [];
      Message.find({  
         }, function(err, message) {
             if (err) {
@@ -65,11 +66,11 @@ function loadMessages() {
             message.forEach(function(message) {
                 entries.push({
                     title: message.title,
-                    content: message.entryText,
+                    entryText: message.entryText,
                     published: message.published,
                     _id: message._id
                 })   
             });
         });
-        console.log(entries);
+        return entries;
 }
