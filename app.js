@@ -4,7 +4,7 @@ var express = require("express");
 var logger = require("morgan");
 var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
-
+var port_number = process.env.PORT || 3000;
 var configDB = require('./config/database.js');
 mongoose.connect(configDB.url);
 
@@ -28,20 +28,20 @@ app.use(logger("dev"));
 // form (The extended option is required.)
 app.use(bodyParser.urlencoded({ extended: false}));
 
-var newEntryCtrl = require('./controllers/new-entry.js');
+var entryCtrl = require('./controllers/entries.js');
 
 // When visiting the site root, renders the homepage (at views/index.ejs)
-app.get("/", newEntryCtrl.loadIndex);
+app.get("/", entryCtrl.loadIndex);
 
 // Renders the "new entry" page (at views/index.ejs) when GETing the URL
-app.get("/new-entry", newEntryCtrl.loadNewEntry);
+app.get("/new-entry", entryCtrl.loadNewEntry);
 
-app.get("/update-entry/delete/:messageId", newEntryCtrl.deleteEntry);
+app.get("/update-entry/delete/:messageId", entryCtrl.deleteEntry);
 
-app.get("/update-entry/:messageId", newEntryCtrl.getEntryToUpdate);
-app.post("/update-entry/:messageId", newEntryCtrl.postEntry);
+app.get("/update-entry/:messageId", entryCtrl.getEntryToUpdate);
+app.post("/update-entry/:messageId", entryCtrl.postEntry);
 
-app.post("/new-entry", newEntryCtrl.postNewEntry);
+app.post("/new-entry", entryCtrl.postNewEntry);
 
 // var app = angular.module('testApp', []);
 
@@ -51,9 +51,8 @@ app.use(function(request, response) {
 })
 
 // Start server on port 3000
-http.createServer(app).listen(3000, function() {
-    console.log("Guestbook app started on port 3000.");
-})
+app.listen(port_number);
+    console.log("Grizzly book started on port " + port_number);
 
 
 function loadMessages() {
