@@ -16,6 +16,10 @@ var app = express();
 app.set("views", path.resolve(__dirname, "views"));
 app.set("view engine", "ejs");
 
+//Allows for static content to load 
+app.use(express.static('/public'));
+
+
 // Creates a global array to store all your entries
 var entries = [];
 // Makes this entries array available in all views
