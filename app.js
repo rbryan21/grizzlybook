@@ -4,6 +4,7 @@ var express = require("express");
 var logger = require("morgan");
 var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
+var port_number = process.env.PORT || 3000;
 
 
 
@@ -129,6 +130,6 @@ app.use(function(request, response) {
 })
 
 // Start server on port 3000
-http.createServer(app).listen(3000, function() {
+http.createServer(app).listen(port_number, function() {
     console.log("Guestbook app started on port 3000.");
 })
