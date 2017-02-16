@@ -1,4 +1,5 @@
 <% include header %>
+
 <h2>Write a new entry</h2>
 
 <form method="post" role="form">
@@ -11,11 +12,20 @@
         <label for="content">Entry text</label>
         <textarea class="form-control" id="body" name="entryText"
             placeholder="Love Express! It's a great tool for
-            building websites." rows="3" required></textarea>
+            building websites." rows="3"></textarea>
     </div>
     <div class="form-group">
         <input type="submit" value="Post entry" class="btn btn-primary">
     </div>
 </form>
+<div id="post-stream" >
+    <h4>Entry Feed</h4>
+    <!--to be populated by Angular-->
+    <div class="post">
+    
+    </div>
+    
+
+</div>
 
 <% include footer %>

@@ -5,6 +5,8 @@ var logger = require("morgan");
 var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
 
+
+
 var configDB = require('./config/database.js');
 mongoose.connect(configDB.url);
 
@@ -13,8 +15,11 @@ var Message = require('./models/message.js');
 // Make an express app
 var app = express();
 
-app.set("views", path.resolve(__dirname, "views"));
+
 app.set("view engine", "ejs");
+
+//Allow  static content
+app.use(express.static(__dirname + "/public"));
 
 // Creates a global array to store all your entries
 entries = [];
@@ -28,6 +33,10 @@ app.use(logger("dev"));
 // Populates a variable called req.body if the user is submitting a
 // form (The extended option is required.)
 app.use(bodyParser.urlencoded({ extended: false}));
+
+
+
+
 
 var newEntryCtrl = require('./controllers/new-entry.js');
 
