@@ -6,7 +6,7 @@
             <div class="panel-heading">
                 <div class="text-muted pull-right">
                     <%= entry.published %>&nbsp;<a href=<%="/update-entry/"+entry._id%> style="color:inherit;"><span class="pull-right glyphicon glyphicon-edit"></span></a>&nbsp;
-                    <a href=<%="/update-entry/delete/"+entry._id%> style="color:inherit;"><span class="pull-right glyphicon glyphicon-remove"  style="padding-right: 5px;"></span></a> 
+                    <a href=<%="/delete-entry/"+entry._id%> style="color:inherit;"><span class="pull-right glyphicon glyphicon-remove"  style="padding-right: 5px;"></span></a> 
                 </div>
                 <%= entry.title %>
             </div>

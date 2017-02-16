@@ -1,4 +1,5 @@
-var Message = require('../models/message.js');
+// Require in our schema for our entry collection
+var Entry = require('../models/entry.js');
 
 // GET /new-entry
 module.exports.loadNewEntry = function(request, response) {
@@ -7,42 +8,48 @@ module.exports.loadNewEntry = function(request, response) {
 
 //POST /new-entry
 module.exports.postNewEntry = function(request, response) {
+
+    // Make sure a user submits a entry with a title and entryText
     if (!request.body.title || !request.body.entryText) {
             response.status(400).send("Entries must have a title and a body");
             return;
         }
 
-        var newMessage = new Message({
+        // Use request.body.(element name) to grab the values from the user submitted form
+        // and create a newEntry using the Entry schema
+        var newEntry = new Entry({
             title : request.body.title,
             entryText : request.body.entryText,
-            published : formatDate(new Date()), 
+            published : formatDate(new Date()), // Pass in a "prettified" date string 
         });
 
-        newMessage.save(function(err) {
+        // Save the new entry to our database in mLab
+        newEntry.save(function(err) {
         if (err) {
             console.log(err);
-        } else {
-        }
+        } 
         });
 
-        // Adds a new entry to the list of entries
+        // Adds a new entry to the list of local entries
         entries.push({
             title: request.body.title,
             entryText: request.body.entryText,
             published: formatDate(new Date()),
-            _id: newMessage._id
+            _id: newEntry._id // Pass in the unique id assigned to the entry to the local array (so we can edit/delete it later)
         });
 
-        console.log(newMessage._id);
         // Redirect to homepage to see new entry
         response.redirect("/");
 };
 
+// GET '/delete-entry/:entryId'
+// /delete-entry/654654321
+// /delete-entry/312315545353
 module.exports.deleteEntry = function(request, response) {
-    Message
-        .findByIdAndRemove(request.params.messageId)
+    Entry
+        .findByIdAndRemove(request.params.entryId) // Use request to grab the entryId value from the params
         .exec(
-            function(err, message) {
+            function(err, entry) {
                 if (err) {
                     console.log(err);
                 }
@@ -50,12 +57,11 @@ module.exports.deleteEntry = function(request, response) {
         );
 
          for (var index = 0; index < entries.length; index++) {
-                    if (entries[index]._id == request.params.messageId) {
-                        entries.splice(index, 1); // remove message
+                    if (entries[index]._id == request.params.entryId) {
+                        entries.splice(index, 1); // remove entry from local array
                     }
          }
             
-              
         response.redirect("/");
 };
 
@@ -64,48 +70,67 @@ module.exports.loadIndex = function(request, response) {
     response.render("index.ejs");
 };
 
+// GET "/update-entry/:entryId"
 module.exports.getEntryToUpdate = function(request, response) {
-    console.log(request.params.messageId);
-    Message
-        .findById(request.params.messageId)
+    Entry
+        .findById(request.params.entryId)
         .exec(
-            function(err, messageDetails) {
+            function(err, entryDetails) {
                 if (err) {
                     console.log(err);
                 }
                 else {
-                    response.render('update-entry.ejs', {
-                    title : messageDetails.title,
-                    entryText : messageDetails.entryText
+                    response.render('update-entry.ejs', {      // Render the update-entry.ejs page 
+                    title : entryDetails.title,              // pass in the current title/entryText of the entry
+                    entryText : entryDetails.entryText
                     });
                 }
             }
         );
 }
 
-module.exports.postEntry = function(request, response) {
-    Message.update({'_id' : request.params.messageId}, {
-        'title' : request.body.title,
+// POST "/update-entry/:entryId"
+// When user clicks 'update entry' 
+module.exports.loadUpdatedEntry = function(request, response) {
+    Entry.update({'_id' : request.params.entryId}, {  // Update entry in db
+        'title' : request.body.title,      // Set the new title & entry text
         'entryText' : request.body.entryText
     }, function(err) {
         if (err) {
             console.log(err);
         } else {
-            entries.forEach(function(entry) {
-                // console.log('Entry._id = ',entry._id);
-                // console.log('request.params.messageId = ', request.params.messageId);
-                // console.log('/n');
-                if (entry._id == request.params.messageId) {
-                    // console.log('hi');
-                    entry.entryText = request.body.entryText;
+            entries.forEach(function(entry) {                       // Update local entries array
+                if (entry._id == request.params.entryId) {
+                    entry.entryText = request.body.entryText; // Set the new title & entry text      
                     entry.title = request.body.title;
                 }
             })
-            response.redirect('/');
+            
         }
+        response.redirect('/');
     });
 };
 
+// Function to return an array of past entries
+module.exports.loadEntries = function(entries) {
+    Entry.find({  
+            }, function(err, entry) {
+                if (err) {
+                    console.log(err);    
+                }
+                entry.forEach(function(entry) {
+                    entries.push({
+                        title: entry.title,
+                        entryText: entry.entryText,
+                        published: entry.published,
+                        _id: entry._id
+                    })   
+                });
+            });
+            return entries;
+};
+
+// Function to "prettify" the date displayed on the home page
 function formatDate(date) {
     var month = date.getMonth() + 1;
     var day = date.getDate();

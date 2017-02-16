@@ -1,27 +1,39 @@
-var http = require("http");
+
+// Require in every module we need
 var path = require("path");
 var express = require("express");
 var logger = require("morgan");
 var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
+
+/* Set the port number
+ If Heroku is launching this app - use heroku's port number 
+ else launch it locally on port 3000
+
+ local launch url: localhost:3000
+ heroku launch url: https://grizzlybook.herokuapp.com/
+*/
 var port_number = process.env.PORT || 3000;
+
+// Require in the mLab database config file
 var configDB = require('./config/database.js');
+// Connect to that URL with mongoose
 mongoose.connect(configDB.url);
 
-var Message = require('./models/message.js');
-
 // Make an express app
-var app = express();
+var app = express(); 
 
+
+// When we call res.render(), express will look in our views folder for the file
+// It creates the relative path for us
 app.set("views", path.resolve(__dirname, "views"));
+
+// At runtime loads the ejs module letting us utilize it for our static web pages
 app.set("view engine", "ejs");
 
-// Creates a global array to store all your entries
-entries = loadMessages();
-// Makes this entries array available in all views
-app.locals.entries = entries;
-
-// Uses Morgan to log every request
+// Uses Morgan to log every request to our web page
+// GET / 304 10.775 ms - -
+// type of http request / status code response time
 app.use(logger("dev"));
 
 // Populates a variable called req.body if the user is submitting a
@@ -30,46 +42,23 @@ app.use(bodyParser.urlencoded({ extended: false}));
 
 var entryCtrl = require('./controllers/entries.js');
 
-// When visiting the site root, renders the homepage (at views/index.ejs)
-app.get("/", entryCtrl.loadIndex);
+// Load up the past messages into a local entries array 
+entries = entryCtrl.loadEntries([]);
+// Allow entries to be accessible in our views
+app.locals.entries = entries;
 
-// Renders the "new entry" page (at views/index.ejs) when GETing the URL
+/*
+    Routes
+
+    app.typeOfHttpRequest(URL, what you want to do);
+*/
+app.get("/", entryCtrl.loadIndex); 
 app.get("/new-entry", entryCtrl.loadNewEntry);
-
-app.get("/update-entry/delete/:messageId", entryCtrl.deleteEntry);
-
-app.get("/update-entry/:messageId", entryCtrl.getEntryToUpdate);
-app.post("/update-entry/:messageId", entryCtrl.postEntry);
-
+app.get("/delete-entry/:entryId", entryCtrl.deleteEntry);
+app.get("/update-entry/:entryId", entryCtrl.getEntryToUpdate);
+app.post("/update-entry/:entryId", entryCtrl.loadUpdatedEntry);
 app.post("/new-entry", entryCtrl.postNewEntry);
 
-// var app = angular.module('testApp', []);
-
-// Renders a 404 page because you're requesting an unknown source
-app.use(function(request, response) {
-    response.status(404).render("404");
-})
-
-// Start server on port 3000
+// Start web server with the assigned port number
 app.listen(port_number);
     console.log("Grizzly book started on port " + port_number);
-
-
-function loadMessages() {
-    entries = [];
-     Message.find({  
-        }, function(err, message) {
-            if (err) {
-                console.log(err);    
-            }
-            message.forEach(function(message) {
-                entries.push({
-                    title: message.title,
-                    entryText: message.entryText,
-                    published: message.published,
-                    _id: message._id
-                })   
-            });
-        });
-        return entries;
-}

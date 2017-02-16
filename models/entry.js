@@ -1,6 +1,8 @@
+// Require in mongoose
 var mongoose = require('mongoose');
 
-var messageSchema = mongoose.Schema({
+// Use mongoose to create a schema for our entries
+var entrySchema = mongoose.Schema({
    title: {
        type: "String",
        required: true
@@ -20,4 +22,4 @@ var messageSchema = mongoose.Schema({
 });
 
 // create the model for users and expose it to our app
-module.exports = mongoose.model('Message', messageSchema);
+module.exports = mongoose.model('Entry', entrySchema);
