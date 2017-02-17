@@ -54,11 +54,27 @@ app.locals.entries = entries;
 */
 app.get("/", entryCtrl.loadIndex); 
 app.get("/new-entry", entryCtrl.loadNewEntry);
+/* 
+
+  /delete-entry/24234242434234234 
+  /delete-entry/23424
+  /delete-entry/<anything>
+ 
+  /delete-entry/<this entry's id> <-- we can then access that id and delete it
+*/ 
 app.get("/delete-entry/:entryId", entryCtrl.deleteEntry);
 app.get("/update-entry/:entryId", entryCtrl.getEntryToUpdate);
 app.post("/update-entry/:entryId", entryCtrl.loadUpdatedEntry);
 app.post("/new-entry", entryCtrl.postNewEntry);
 
-// Start web server with the assigned port number
+/* 
+   Starts web server with port number defined above
+
+   local start will listen on port number 3000 
+   (at localhost:3000/ in the browser)
+
+   Heroku start will listen at https://grizzlybook.herokuapp.com/
+
+*/ 
 app.listen(port_number);
     console.log("Grizzly book started on port " + port_number);

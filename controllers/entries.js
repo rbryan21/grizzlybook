@@ -1,17 +1,18 @@
 /*
 
 This controllers file serves to separate the logic from the routes within app.js 
- +    (app.js would get messy will all this stuff in there)
- +
- +    module.exports.<method name>
- +
- +    (You can use module.exports.<anything> - it can be a variable as well)
- +
- +    - Module.exports exposes the method name to the rest of the application
- +    (all app.js needs to do is require in this file and use that variable to access the below methods)
- +
- +    - Think like a "public method" in java
- +*/
+(app.js would get messy will all this stuff in there)
+ 
+     module.exports.<method name>
+ 
+     (You can use module.exports.<anything> - it can be a variable as well)
+ 
+     - Module.exports exposes the method name to the rest of the application
+     (all app.js needs to do is require in this file and use that variable to access the below methods)
+ 
+    - Think like a "public method" in java
+    
+*/
 
 
 // Require in our schema for our entry collection

@@ -1,5 +1,5 @@
 {
-  "name": "express-guestbook",
+  "name": "grizzlybook",
   "private": true,
   "scripts": {
     "start": "node app"
