@@ -1,3 +1,12 @@
+/*
+    This file utilizes mongoose to create a schema for our Entries collection in our mLab database
+
+    - MongoDB documents do not have a predefined structure (you can enter whatever you what in each collection)
+        - But mongoose can provide a consistent structure for you to follow with new documents
+        - It allows provides other neat features like the connect method
+*/
+
+
 // Require in mongoose
 var mongoose = require('mongoose');
 
@@ -9,10 +18,6 @@ var entrySchema = mongoose.Schema({
    },
    entryText: {
        type: "String",
-       required: true
-   },
-   published: {
-       type: "String", 
        required: true
    },
    date: {

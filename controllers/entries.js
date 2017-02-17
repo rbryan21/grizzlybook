@@ -1,3 +1,18 @@
+/*
+    This controllers file serves to separate the logic from the routes within app.js 
+    (app.js would get messy will all this stuff in there)
+
+    module.exports.<method name>
+
+    (You can use module.exports.<anything> - it can be a variable as well)
+
+    - Module.exports exposes the method name to the rest of the application
+    (all app.js needs to do is require in this file and use that variable to access the below methods)
+
+    - Think like a "public method" in java
+*/
+
+
 // Require in our schema for our entry collection
 var Entry = require('../models/entry.js');
 
@@ -19,8 +34,7 @@ module.exports.postNewEntry = function(request, response) {
         // and create a newEntry using the Entry schema
         var newEntry = new Entry({
             title : request.body.title,
-            entryText : request.body.entryText,
-            published : formatDate(new Date()), // Pass in a "prettified" date string 
+            entryText : request.body.entryText
         });
 
         // Save the new entry to our database in mLab
@@ -122,7 +136,7 @@ module.exports.loadEntries = function(entries) {
                     entries.push({
                         title: entry.title,
                         entryText: entry.entryText,
-                        published: entry.published,
+                        published: formatDate(entry.date),
                         _id: entry._id
                     })   
                 });
@@ -130,6 +144,7 @@ module.exports.loadEntries = function(entries) {
             return entries;
 };
 
+// No need to use module.exports because it's only being used in this file (not the entire application)
 // Function to "prettify" the date displayed on the home page
 function formatDate(date) {
     var month = date.getMonth() + 1;
