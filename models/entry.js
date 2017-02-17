@@ -20,6 +20,10 @@ var entrySchema = mongoose.Schema({
        type: "String",
        required: true
    },
+   published: {
+       type: "String",
+       requred: true
+   },
    date: {
        type: Date,
        default: Date.now()
