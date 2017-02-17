@@ -13,7 +13,7 @@ This controllers file serves to separate the logic from the routes within app.js
  +    - Think like a "public method" in java
  +*/
 
-*/
+
 // Require in our schema for our entry collection
 var Entry = require('../models/entry.js');
 
